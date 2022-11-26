@@ -278,7 +278,7 @@ public class WebSocketService extends Service {
             Map<String, Object> extras,
             Long appid) {
 
-        Intent intent;
+        Intent intent = null;
 
         String intentUrl =
                 Extras.getNestedValue(
@@ -291,14 +291,22 @@ public class WebSocketService extends Service {
             startActivity(intent);
         }
 
-        String url =
-                Extras.getNestedValue(String.class, extras, "client::notification", "click", "url");
 
-        if (url != null) {
-            intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(url));
+
+        String pkg =
+                Extras.getNestedValue(String.class, extras, "client::notification", "click", "package");
+
+        if (pkg != null) {
+             intent = getPackageManager().getLaunchIntentForPackage(pkg);
         } else {
-            intent = new Intent(this, MessagesActivity.class);
+            String url =
+                Extras.getNestedValue(String.class, extras, "client::notification", "click", "url");
+            if (url != null) {
+                intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(url));
+            } else {
+                intent = new Intent(this, MessagesActivity.class);
+            }
         }
 
         PendingIntent contentIntent =
