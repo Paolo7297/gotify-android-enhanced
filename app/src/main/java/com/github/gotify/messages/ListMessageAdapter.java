@@ -115,7 +115,7 @@ public class ListMessageAdapter extends RecyclerView.Adapter<ListMessageAdapter.
             holder.message.setText(message.message.getMessage());
         }
         holder.title.setText(message.message.getTitle());
-        picasso.load(Utils.resolveAbsoluteUrl(settings.url() + "/", message.image))
+        picasso.load(message.image)
                 .error(R.drawable.ic_alarm)
                 .placeholder(R.drawable.ic_placeholder)
                 .into(holder.image);

@@ -33,7 +33,7 @@ public class MessagesModel extends ViewModel {
         client =
                 ClientFactory.clientToken(settings.url(), settings.sslSettings(), settings.token());
         appsHolder = new ApplicationHolder(parentView, client);
-        messages = new MessageFacade(client.createService(MessageApi.class), appsHolder);
+        messages = new MessageFacade(client.createService(MessageApi.class), appsHolder, settings);
     }
 
     public Settings getSettings() {

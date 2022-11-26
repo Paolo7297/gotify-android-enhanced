@@ -1,7 +1,11 @@
 package com.github.gotify.messages.provider;
 
+import com.github.gotify.Settings;
+import com.github.gotify.Utils;
 import com.github.gotify.client.model.Application;
 import com.github.gotify.client.model.Message;
+import com.github.gotify.messages.Extras;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -9,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class MessageImageCombiner {
 
-    List<MessageWithImage> combine(List<Message> messages, List<Application> applications) {
+    List<MessageWithImage> combine(List<Message> messages, List<Application> applications, Settings settings) {
         Map<Long, String> appIdToImage = appIdToImage(applications);
 
         List<MessageWithImage> result = new ArrayList<>();
@@ -18,7 +22,16 @@ public class MessageImageCombiner {
             MessageWithImage messageWithImage = new MessageWithImage();
 
             messageWithImage.message = message;
-            messageWithImage.image = appIdToImage.get(message.getAppid());
+
+            String imageUrl = Extras.getNestedValue(
+                    String.class, message.getExtras(), "client::notification", "imageUrl");
+
+            if (imageUrl != null) {
+                messageWithImage.image = imageUrl;
+            } else {
+                messageWithImage.image =
+                        Utils.resolveAbsoluteUrl(settings.url() + "/", appIdToImage.get(message.getAppid()));
+            }
 
             result.add(messageWithImage);
         }

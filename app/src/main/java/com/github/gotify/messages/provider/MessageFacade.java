@@ -1,5 +1,6 @@
 package com.github.gotify.messages.provider;
 
+import com.github.gotify.Settings;
 import com.github.gotify.client.api.MessageApi;
 import com.github.gotify.client.model.Message;
 import com.github.gotify.client.model.PagedMessages;
@@ -10,16 +11,18 @@ public class MessageFacade {
     private final MessageRequester requester;
     private final MessageStateHolder state;
     private final MessageImageCombiner combiner;
+    private final Settings settings;
 
-    public MessageFacade(MessageApi api, ApplicationHolder applicationHolder) {
+    public MessageFacade(MessageApi api, ApplicationHolder applicationHolder, Settings settings) {
         this.applicationHolder = applicationHolder;
         this.requester = new MessageRequester(api);
         this.combiner = new MessageImageCombiner();
         this.state = new MessageStateHolder();
+        this.settings = settings;
     }
 
     public synchronized List<MessageWithImage> get(long appId) {
-        return combiner.combine(state.state(appId).messages, applicationHolder.get());
+        return combiner.combine(state.state(appId).messages, applicationHolder.get(), settings);
     }
 
     public synchronized void addMessages(List<Message> messages) {
