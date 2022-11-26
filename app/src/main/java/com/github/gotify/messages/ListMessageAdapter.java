@@ -3,10 +3,13 @@ package com.github.gotify.messages;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.text.format.DateUtils;
 import android.text.util.Linkify;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -127,6 +130,34 @@ public class ListMessageAdapter extends RecyclerView.Adapter<ListMessageAdapter.
 
         holder.delete.setOnClickListener(
                 (ignored) -> delete.delete(holder.getAdapterPosition(), message.message, false));
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = null;
+                String pkg =
+                        Extras.getNestedValue(String.class, message.message.getExtras(), "client::notification", "click", "package");
+
+                if (pkg != null) {
+                    intent = context.getPackageManager().getLaunchIntentForPackage(pkg);
+                } else {
+                    String url =
+                            Extras.getNestedValue(String.class, message.message.getExtras(), "client::notification", "click", "url");
+                    if (url != null) {
+                        intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setData(Uri.parse(url));
+                    } else {
+                        intent = new Intent(context, MessagesActivity.class);
+                    }
+                }
+
+                if (intent != null) {
+                    context.startActivity(intent);
+                }
+
+            }
+        });
+
     }
 
     @Override
