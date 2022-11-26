@@ -350,6 +350,17 @@ public class WebSocketService extends Service {
             }
         }
 
+        String imageUrl =
+                Extras.getNestedValue(String.class, extras, "client::notification", "imageUrl");
+
+        if (imageUrl != null) {
+            try {
+                b.setLargeIcon(picassoHandler.getImageFromUrl(imageUrl));
+            } catch (Exception e) {
+                Log.e("Error loading imageUrl", e);
+            }
+        }
+
         NotificationManager notificationManager =
                 (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(Utils.longToInt(id), b.build());
