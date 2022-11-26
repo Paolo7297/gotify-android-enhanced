@@ -345,19 +345,6 @@ public class WebSocketService extends Service {
         b.setContentText(message);
         b.setStyle(new NotificationCompat.BigTextStyle().bigText(formattedMessage));
 
-        String notificationImageUrl =
-                Extras.getNestedValue(String.class, extras, "client::notification", "bigImageUrl");
-
-        if (notificationImageUrl != null) {
-            try {
-                b.setStyle(
-                        new NotificationCompat.BigPictureStyle()
-                                .bigPicture(picassoHandler.getImageFromUrl(notificationImageUrl)));
-            } catch (Exception e) {
-                Log.e("Error loading bigImageUrl", e);
-            }
-        }
-
         String imageUrl =
                 Extras.getNestedValue(String.class, extras, "client::notification", "imageUrl");
 
@@ -369,6 +356,24 @@ public class WebSocketService extends Service {
             }
         }
 
+        String notificationImageUrl =
+                Extras.getNestedValue(String.class, extras, "client::notification", "bigImageUrl");
+
+        if (notificationImageUrl != null) {
+            try {
+                NotificationCompat.BigPictureStyle style = new NotificationCompat.BigPictureStyle()
+                        .bigPicture(picassoHandler.getImageFromUrl(notificationImageUrl));
+
+                if (notificationImageUrl.equals(imageUrl)) {
+                    style.bigLargeIcon(null);
+                }
+
+                b.setStyle(style);
+
+            } catch (Exception e) {
+                Log.e("Error loading bigImageUrl", e);
+            }
+        }
         NotificationManager notificationManager =
                 (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(Utils.longToInt(id), b.build());
