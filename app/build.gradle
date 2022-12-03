@@ -11,11 +11,12 @@ android {
         minSdk 23
         targetSdk 33
         versionCode 26
-        versionName "2.4.0"
+        versionName "2.4.0 Enhanced"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         signingConfig signingConfigs.debug
-        resValue "string", "app_name", "Gotify"
+        resValue "string", "app_name", "Gotify Enhanced"
+        resValue "string", "launcher_name", "Gotify"
     }
     buildTypes {
         release {
