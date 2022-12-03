@@ -298,7 +298,8 @@ public class WebSocketService extends Service {
 
         if (pkg != null) {
              intent = getPackageManager().getLaunchIntentForPackage(pkg);
-        } else {
+        }
+        if (pkg == null || intent == null){
             String url =
                 Extras.getNestedValue(String.class, extras, "client::notification", "click", "url");
             if (url != null) {
