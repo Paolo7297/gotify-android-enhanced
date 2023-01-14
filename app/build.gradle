@@ -36,12 +36,14 @@ android {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
-    lintOptions {
+    packagingOptions {
+        resources {
+            excludes += ['META-INF/DEPENDENCIES']
+        }
+    }
+    lint {
         disable 'GoogleAppIndexingWarning'
         lintConfig file('../lint.xml')
-    }
-    packagingOptions {
-        exclude 'META-INF/DEPENDENCIES'
     }
 }
 
@@ -61,8 +63,8 @@ if (project.hasProperty('sign')) {
 
 dependencies {
     implementation project(':client')
-    implementation 'androidx.appcompat:appcompat:1.5.1'
-    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'androidx.appcompat:appcompat:1.6.0'
+    implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
